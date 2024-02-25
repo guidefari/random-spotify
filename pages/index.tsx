@@ -1,8 +1,11 @@
 import { useSession, signIn, signOut } from 'next-auth/react';
+import Image from 'next/image';
+import Link from 'next/link';
 import { useState } from 'react';
 
 export default function Home() {
   const { data: session } = useSession();
+  console.log('session:', session)
   const [list, setList] = useState([]);
 
   const getMyPlaylists = async () => {
@@ -14,16 +17,15 @@ export default function Home() {
   if (session) {
     return (
       <>
-        Signed in as {session?.token?.email} <br />
-        <button onClick={() => signOut()}>Sign out</button>
+        Signed in as {session?.session?.user?.name} <br />
+        <Image width={50} height={50} alt={session?.session?.user?.name} src={session?.session?.user?.image}/>
+
         <hr />
-        <button onClick={() => getMyPlaylists()}>Get all my playlists</button>
-        {list.map((item) => (
-          <div key={item.id}>
-            <h1>{item.name}</h1>
-            <img src={item.images[0]?.url} width='100' />
-          </div>
-        ))}
+        <button>
+
+          <Link target='_blank' href={'/api/playlists'}>Random</Link>
+          </button>
+        <button onClick={() => signOut()}>Sign out</button>
       </>
     );
   }
